@@ -1,3 +1,22 @@
 {
-  "users": []
+  "users": [
+    {
+      "id": "9cfd",
+      "username": "",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "803e",
+      "username": "prince",
+      "email": "princemashumu@yahoo.com",
+      "password": "123"
+    },
+    {
+      "id": "fc41",
+      "username": "Peekay",
+      "email": "peekay@gmail.com",
+      "password": "peekay123"
+    }
+  ]
 }

@@ -1,15 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './Components/Landing';
-import Landing from './Components/Home';
+import Home from './Components/Home';
+import Landing from './Components/Landing';
 
 const App = () => {
   return (
     <Router>
       <div>
         <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/Landing" element={<Landing />} />
         </Routes>
       </div>
     </Router>
