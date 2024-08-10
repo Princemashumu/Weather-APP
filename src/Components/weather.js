@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Typography, TextField, Button, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Box, Typography, TextField, Button, ToggleButton, ToggleButtonGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import ClearDayIcon from '../assets/clear-day.svg';
 import ThunderstormIcon from '../assets/thunderstorms-night-rain.svg';
 import SnowIcon from '../assets/snow.svg';
@@ -11,6 +11,8 @@ import { ReactComponent as CelsiusIcon } from '../assets/celsius.svg';
 import { ReactComponent as FahrenheitIcon } from '../assets/fahrenheit.svg';
 import moment from 'moment-timezone';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
+import Timetable from './Timetable';
+
 
 const Weather = () => {
   const [weather, setWeather] = useState(null);
@@ -21,6 +23,9 @@ const Weather = () => {
   const [unit, setUnit] = useState('metric');
   const [cityTime, setCityTime] = useState('');
   const [selectedDate, setSelectedDate] = useState(null);
+  const [locations, setLocations] = useState([]);
+  const [weatherData, setWeatherData] = useState([]);
+
 
   const API_KEY = 'cb8a24eda19aec99706e3ce761cb5881';
 
@@ -43,7 +48,10 @@ const Weather = () => {
       setCityTime(currentTime.format('dddd HH:mm'));
 
       await saveWeatherData(cityName, response.data);
-
+      if (!locations.includes(cityName)) {
+        setLocations([...locations, cityName]);
+        localStorage.setItem('locations', JSON.stringify([...locations, cityName]));
+      }
       setLoading(false);
     } catch (error) {
       setError('Error fetching weather data');
@@ -126,19 +134,24 @@ const Weather = () => {
   };
 
   useEffect(() => {
-    const fetchLastCity = async () => {
-      try {
-        const lastSearchedCity = localStorage.getItem('lastSearchedCity');
-        if (lastSearchedCity) {
-          setCity(lastSearchedCity);
-          await fetchWeather(lastSearchedCity);
-        }
-      } catch (error) {
-        console.error('Error fetching last city data:', error);
-      }
-    };
+    const storedLocations = JSON.parse(localStorage.getItem('locations')) || [];
+    setLocations(storedLocations);
 
-    fetchLastCity();
+    const lastSearchedCity = localStorage.getItem('lastSearchedCity');
+    if (lastSearchedCity) {
+      setCity(lastSearchedCity);
+      fetchWeather(lastSearchedCity);
+    }
+    const data = [
+      { time: '6:00 AM', temperature: '15°C', condition: 'Clear' },
+      { time: '9:00 AM', temperature: '18°C', condition: 'Partly Cloudy' },
+      { time: '12:00 PM', temperature: '22°C', condition: 'Sunny' },
+      { time: '3:00 PM', temperature: '24°C', condition: 'Sunny' },
+      { time: '6:00 PM', temperature: '20°C', condition: 'Clear' },
+      { time: '9:00 PM', temperature: '16°C', condition: 'Cloudy' },
+      // Add more rows as needed
+    ];
+    setWeatherData(data);
   }, []);
 
   const chartData = forecast?.map((entry) => ({
@@ -153,6 +166,10 @@ const Weather = () => {
       setSelectedDate(selectedDate);
       fetchWeatherForDate(city, selectedDate);
     }
+  };
+  const handleLocationClick = (location) => {
+    setCity(location);
+    fetchWeather(location);
   };
 
   return (
@@ -189,6 +206,22 @@ const Weather = () => {
         </Button>
       </Box>
 
+      {locations.length > 0 && (
+        <Box sx={{ marginTop: '20px', textAlign: 'left' }}>
+          {/* <Typography variant="h6">Saved Locations:</Typography> */}
+          {locations.map((location, index) => (
+            <Typography
+              key={index}
+              sx={{ cursor: 'pointer', color: 'blue', marginBottom: '5px' }}
+              onClick={() => handleLocationClick(location)}
+            >
+              {location}
+            </Typography>
+          ))}
+        </Box>
+      )}
+
+
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginTop: '20px' }}>
         {weather && (
           <>
@@ -218,7 +251,41 @@ const Weather = () => {
           </>
         )}
       </Box>
-
+      <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        background: 'linear-gradient(180deg, #4A90E2, #f5f5f5)', // Background style
+        textAlign: 'center',
+        color: '#333',
+        padding: '20px',
+      }}
+    >
+      <Typography variant="h4" sx={{ marginBottom: '20px' }}>
+        Weather Timetable
+      </Typography>
+      <TableContainer component={Paper} sx={{ maxWidth: '800px', margin: '0 auto' }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">Time</TableCell>
+              <TableCell align="center">Temperature</TableCell>
+              <TableCell align="center">Condition</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {weatherData.map((row, index) => (
+              <TableRow key={index}>
+                <TableCell align="center">{row.time}</TableCell>
+                <TableCell align="center">{row.temperature}</TableCell>
+                <TableCell align="center">{row.condition}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
       <ToggleButtonGroup
         value={unit}
         exclusive
