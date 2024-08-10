@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, AppBar, Toolbar, IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -10,16 +11,16 @@ const Landing = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleProfileMenuOpen = (event) => {
+  const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleProfileMenuClose = () => {
+  const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
   const handleSignOut = () => {
-    handleProfileMenuClose();
+    handleMenuClose();
     localStorage.removeItem('authToken'); // or sessionStorage.removeItem('authToken')
     navigate('/');
   };
@@ -37,48 +38,50 @@ const Landing = () => {
         overflowX: 'hidden',
       }}
     >
-      <Box sx={{ padding: '20px', paddingTop: '80px' }}>
-        <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#fff', marginBottom: '20px' }}>
-          Weather Forecast
-        </Typography>
-        <Weather />
-      </Box>
-
-      <AppBar
-        position="fixed"
-        sx={{
-          bottom: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: '#1e1e1e',
-          boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.3)',
-          borderTopLeftRadius: '20px',
-          borderTopRightRadius: '20px',
-          top: 'auto',
-          padding: '10px 0',
-        }}
-      >
-        <Toolbar sx={{ justifyContent: 'space-around' }}>
-          <IconButton color="inherit" aria-label="home">
-            <HomeIcon sx={{ fontSize: 30 }} />
-          </IconButton>
-          <IconButton color="inherit" aria-label="location">
-            <LocationOnIcon sx={{ fontSize: 30 }} />
-          </IconButton>
-          <IconButton color="inherit" onClick={handleProfileMenuOpen}>
-            <AccountCircleIcon sx={{ fontSize: 30 }} />
+      <AppBar position="fixed" sx={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
+        <Toolbar
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            onClick={handleMenuOpen}
+            sx={{ zIndex: 1 }}
+          >
+            <MenuIcon sx={{ color: '#007BFF', fontSize: '2rem' }} />
           </IconButton>
         </Toolbar>
       </AppBar>
+
+      <Box sx={{ padding: '20px', paddingTop: '80px' }}>
+        <Weather />
+      </Box>
+
       <Menu
         anchorEl={anchorEl}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         keepMounted
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={Boolean(anchorEl)}
-        onClose={handleProfileMenuClose}
+        onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
+        <MenuItem onClick={() => navigate('/home')}>
+          <HomeIcon sx={{ mr: 1 }} />
+          Home
+        </MenuItem>
+        <MenuItem onClick={() => navigate('/location')}>
+          <LocationOnIcon sx={{ mr: 1 }} />
+          Location
+        </MenuItem>
+        <MenuItem onClick={handleSignOut}>
+          <AccountCircleIcon sx={{ mr: 1 }} />
+          Sign Out
+        </MenuItem>
       </Menu>
     </Box>
   );

@@ -242,15 +242,32 @@ const Weather = () => {
           <Box sx={{ marginTop: '30px', height: '300px' }}>
             <Typography variant="h6">5-Day Forecast</Typography>
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} onClick={handleChartClick}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="temp" stroke="#8884d8" />
-              </LineChart>
-            </ResponsiveContainer>
+  <LineChart data={chartData} onClick={handleChartClick}>
+    <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+    <XAxis dataKey="date" tick={{ fill: '#333' }} />
+    <YAxis tick={{ fill: '#333' }} domain={['dataMin', 'dataMax']} />
+    <Tooltip
+      contentStyle={{
+        backgroundColor: '#ffffff',
+        border: '1px solid #ddd',
+        borderRadius: '10px',
+        padding: '10px',
+      }}
+      labelStyle={{ color: '#333' }}
+      itemStyle={{ color: '#333' }}
+    />
+    <Legend verticalAlign="top" height={36} iconType="circle" />
+    <Line
+      type="monotone"
+      dataKey="temp"
+      stroke="#007BFF"
+      strokeWidth={3}
+      dot={{ r: 5, strokeWidth: 2, stroke: '#007BFF' }}
+      activeDot={{ r: 8, fill: '#007BFF' }}
+    />
+  </LineChart>
+</ResponsiveContainer>
+
           </Box>
         )
       )}
