@@ -24,7 +24,7 @@ const Timetable = () => {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        background: 'linear-gradient(180deg, #4A90E2, #f5f5f5)', // Background style
+        background: 'blue', // Background style
         textAlign: 'center',
         color: '#333',
         padding: '20px',

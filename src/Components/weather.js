@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Typography, TextField, Button, ToggleButton, ToggleButtonGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+import { Box, Typography, TextField, Button, ToggleButton, ToggleButtonGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import ClearDayIcon from '../assets/clear-day.svg';
 import ThunderstormIcon from '../assets/thunderstorms-night-rain.svg';
 import SnowIcon from '../assets/snow.svg';
@@ -11,8 +11,6 @@ import { ReactComponent as CelsiusIcon } from '../assets/celsius.svg';
 import { ReactComponent as FahrenheitIcon } from '../assets/fahrenheit.svg';
 import moment from 'moment-timezone';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
-import Timetable from './Timetable';
-
 
 const Weather = () => {
   const [weather, setWeather] = useState(null);
@@ -26,12 +24,9 @@ const Weather = () => {
   const [locations, setLocations] = useState([]);
   const [weatherData, setWeatherData] = useState([]);
 
-
   const API_KEY = 'cb8a24eda19aec99706e3ce761cb5881';
 
-  const getCurrentUserId = () => {
-    return 'user-id';
-  };
+  const getCurrentUserId = () => 'user-id';
 
   const fetchWeather = async (cityName) => {
     setLoading(true);
@@ -67,7 +62,7 @@ const Weather = () => {
         `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${API_KEY}&units=${unit}`
       );
 
-      const selectedWeather = response.data.list.find(entry => entry.dt_txt === date);
+      const selectedWeather = response.data.list.find((entry) => entry.dt_txt === date);
       setWeather(selectedWeather);
       setCityTime(moment(selectedWeather.dt_txt).format('dddd HH:mm'));
 
@@ -84,7 +79,7 @@ const Weather = () => {
 
       const existingCityResponse = await axios.get('http://localhost:5000/cities');
       const existingCities = existingCityResponse.data;
-      const existingCity = existingCities.find(city => city.name === cityName && city.userId === userId);
+      const existingCity = existingCities.find((city) => city.name === cityName && city.userId === userId);
 
       if (existingCity) {
         await axios.delete(`http://localhost:5000/cities/${existingCity.id}`);
@@ -93,7 +88,7 @@ const Weather = () => {
       await axios.post('http://localhost:5000/cities', {
         name: cityName,
         weatherData: weatherData,
-        userId: userId
+        userId: userId,
       });
     } catch (error) {
       console.error('Error saving city data to JSON server:', error);
@@ -117,19 +112,19 @@ const Weather = () => {
 
   const getWeatherIcon = (weatherId) => {
     if (weatherId >= 200 && weatherId < 300)
-      return <img src={ThunderstormIcon} alt="Thunderstorm" style={{ width: '100px', height: '100px' }} />;
+      return <img src={ThunderstormIcon} alt="Thunderstorm" style={{ width: '50px', height: '50px' }} />;
     if (weatherId >= 300 && weatherId < 500)
-      return <img src={RainIcon} alt="Drizzle" style={{ width: '100px', height: '100px' }} />;
+      return <img src={RainIcon} alt="Drizzle" style={{ width: '50px', height: '50px' }} />;
     if (weatherId >= 500 && weatherId < 600)
-      return <img src={ThunderstormIcon} alt="Rain" style={{ width: '100px', height: '100px' }} />;
+      return <img src={ThunderstormIcon} alt="Rain" style={{ width: '50px', height: '50px' }} />;
     if (weatherId >= 600 && weatherId < 700)
-      return <img src={SnowIcon} alt="Snow" style={{ width: '100px', height: '100px' }} />;
+      return <img src={SnowIcon} alt="Snow" style={{ width: '50px', height: '50px' }} />;
     if (weatherId >= 700 && weatherId < 800)
-      return <img src={FogIcon} alt="Fog" style={{ width: '100px', height: '100px' }} />;
+      return <img src={FogIcon} alt="Fog" style={{ width: '50px', height: '50px' }} />;
     if (weatherId === 800)
-      return <img src={ClearDayIcon} alt="Clear Sky" style={{ width: '100px', height: '100px' }} />;
+      return <img src={ClearDayIcon} alt="Clear Sky" style={{ width: '50px', height: '50px' }} />;
     if (weatherId > 800)
-      return <img src={CloudyIcon} alt="Cloudy" style={{ width: '100px', height: '100px' }} />;
+      return <img src={CloudyIcon} alt="Cloudy" style={{ width: '50px', height: '50px' }} />;
     return null;
   };
 
@@ -143,12 +138,12 @@ const Weather = () => {
       fetchWeather(lastSearchedCity);
     }
     const data = [
-      { time: '6:00 AM', temperature: '15°C', condition: 'Clear' },
-      { time: '9:00 AM', temperature: '18°C', condition: 'Partly Cloudy' },
-      { time: '12:00 PM', temperature: '22°C', condition: 'Sunny' },
-      { time: '3:00 PM', temperature: '24°C', condition: 'Sunny' },
-      { time: '6:00 PM', temperature: '20°C', condition: 'Clear' },
-      { time: '9:00 PM', temperature: '16°C', condition: 'Cloudy' },
+      { time: '6:00 AM', temperature: '15°C', weatherId: 800 },
+      { time: '9:00 AM', temperature: '18°C', weatherId: 801 },
+      { time: '12:00 PM', temperature: '22°C', weatherId: 800 },
+      { time: '3:00 PM', temperature: '24°C', weatherId: 801 },
+      { time: '6:00 PM', temperature: '20°C', weatherId: 800 },
+      { time: '9:00 PM', temperature: '16°C', weatherId: 802 },
       // Add more rows as needed
     ];
     setWeatherData(data);
@@ -167,6 +162,7 @@ const Weather = () => {
       fetchWeatherForDate(city, selectedDate);
     }
   };
+
   const handleLocationClick = (location) => {
     setCity(location);
     fetchWeather(location);
@@ -208,7 +204,6 @@ const Weather = () => {
 
       {locations.length > 0 && (
         <Box sx={{ marginTop: '20px', textAlign: 'left' }}>
-          {/* <Typography variant="h6">Saved Locations:</Typography> */}
           {locations.map((location, index) => (
             <Typography
               key={index}
@@ -220,7 +215,6 @@ const Weather = () => {
           ))}
         </Box>
       )}
-
 
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginTop: '20px' }}>
         {weather && (
@@ -242,56 +236,66 @@ const Weather = () => {
                   )}
                 </Box>
               </Typography>
-              <Box sx={{ marginTop: '10px', padding: '10px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: 'rgba(255, 255, 255, 0.2)', backdropFilter: 'blur(10px)' }}>
-                <Typography variant="body1"><strong>Humidity:</strong> {weather.main.humidity}%</Typography>
-                <Typography variant="body1"><strong>Wind Speed:</strong> {weather.wind.speed} m/s</Typography>
-                <Typography variant="body1"><strong>Description:</strong> {weather.weather[0].description}</Typography>
+              <Box
+                sx={{
+                  marginTop: '10px',
+                  padding: '10px',
+                  border: '1px solid #ddd',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                  backdropFilter: 'blur(10px)',
+                }}
+              >
+                <Typography variant="body1">
+                  <strong>Humidity:</strong> {weather.main.humidity}%
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Wind Speed:</strong> {weather.wind.speed} m/s
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Description:</strong> {weather.weather[0].description}
+                </Typography>
               </Box>
             </Box>
           </>
         )}
       </Box>
       <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        background: 'linear-gradient(180deg, #4A90E2, #f5f5f5)', // Background style
-        textAlign: 'center',
-        color: '#333',
-        padding: '20px',
-      }}
-    >
-      <Typography variant="h4" sx={{ marginBottom: '20px' }}>
-        Weather Timetable
-      </Typography>
-      <TableContainer component={Paper} sx={{ maxWidth: '800px', margin: '0 auto' }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">Time</TableCell>
-              <TableCell align="center">Temperature</TableCell>
-              <TableCell align="center">Condition</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {weatherData.map((row, index) => (
-              <TableRow key={index}>
-                <TableCell align="center">{row.time}</TableCell>
-                <TableCell align="center">{row.temperature}</TableCell>
-                <TableCell align="center">{row.condition}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
-      <ToggleButtonGroup
-        value={unit}
-        exclusive
-        onChange={handleUnitChange}
-        sx={{ marginTop: '20px' }}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+          // background: 'linear-gradient(180deg, #4A90E2, #f5f5f5)', // Background style
+          textAlign: 'center',
+          color: '#333',
+          padding: '20px',
+        }}
       >
+        <Typography variant="h4" sx={{ marginBottom: '20px' }}>
+          Weather Timetable
+        </Typography>
+        <TableContainer fullwidth component={Paper} sx={{ maxWidth: '800px', margin: '0 auto' }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Time</TableCell>
+                <TableCell align="center">Temperature</TableCell>
+                <TableCell align="center">Condition</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {weatherData.map((row, index) => (
+                <TableRow key={index}>
+                  <TableCell align="center">{row.time}</TableCell>
+                  <TableCell align="center">{row.temperature}</TableCell>
+                  <TableCell align="center">{getWeatherIcon(row.weatherId)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+      <ToggleButtonGroup value={unit} exclusive onChange={handleUnitChange} sx={{ marginTop: '20px' }}>
         <ToggleButton value="metric" aria-label="Celsius">
           <CelsiusIcon style={{ width: '24px', height: '24px', marginRight: '5px' }} />
         </ToggleButton>
@@ -309,32 +313,31 @@ const Weather = () => {
           <Box sx={{ marginTop: '30px', height: '300px' }}>
             <Typography variant="h6">5-Day Forecast</Typography>
             <ResponsiveContainer width="100%" height="100%">
-  <LineChart data={chartData} onClick={handleChartClick}>
-    <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-    <XAxis dataKey="date" tick={{ fill: '#333' }} />
-    <YAxis tick={{ fill: '#333' }} domain={['dataMin', 'dataMax']} />
-    <Tooltip
-      contentStyle={{
-        backgroundColor: '#ffffff',
-        border: '1px solid #ddd',
-        borderRadius: '10px',
-        padding: '10px',
-      }}
-      labelStyle={{ color: '#333' }}
-      itemStyle={{ color: '#333' }}
-    />
-    <Legend verticalAlign="top" height={36} iconType="circle" />
-    <Line
-      type="monotone"
-      dataKey="temp"
-      stroke="#007BFF"
-      strokeWidth={3}
-      dot={{ r: 5, strokeWidth: 2, stroke: '#007BFF' }}
-      activeDot={{ r: 8, fill: '#007BFF' }}
-    />
-  </LineChart>
-</ResponsiveContainer>
-
+              <LineChart data={chartData} onClick={handleChartClick}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                <XAxis dataKey="date" tick={{ fill: '#333' }} />
+                <YAxis tick={{ fill: '#333' }} domain={['dataMin', 'dataMax']} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #ddd',
+                    borderRadius: '10px',
+                    padding: '10px',
+                  }}
+                  labelStyle={{ color: '#333' }}
+                  itemStyle={{ color: '#333' }}
+                />
+                <Legend verticalAlign="top" height={36} iconType="circle" />
+                <Line
+                  type="monotone"
+                  dataKey="temp"
+                  stroke="#007BFF"
+                  strokeWidth={3}
+                  dot={{ r: 5, strokeWidth: 2, stroke: '#007BFF' }}
+                  activeDot={{ r: 8, fill: '#007BFF' }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </Box>
         )
       )}
@@ -342,4 +345,4 @@ const Weather = () => {
   );
 };
 
-export default Weather;
+export default Weather
