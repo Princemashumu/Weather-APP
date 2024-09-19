@@ -1,0 +1,107 @@
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, TextField, Button, Card, CardContent } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs
+
+const LocationsSection = ({ setCity }) => {
+  const [locations, setLocations] = useState([]);
+  const [newLocation, setNewLocation] = useState('');
+
+  // Load locations from local storage on component mount
+  useEffect(() => {
+    const storedLocations = JSON.parse(localStorage.getItem('locations')) || [];
+    console.log("Loaded locations:", storedLocations); // Debugging
+    setLocations(storedLocations);
+  }, []);
+
+  // Save locations to local storage whenever they change
+  useEffect(() => {
+    console.log("Saving locations:", locations); // Debugging
+    localStorage.setItem('locations', JSON.stringify(locations));
+  }, [locations]);
+
+  const handleAddLocation = () => {
+    if (newLocation.trim() === '') return;
+
+    // Add new location
+    const updatedLocations = [...locations, { id: uuidv4(), name: newLocation }];
+    setLocations(updatedLocations);
+
+    // Set new location as the current city
+    setCity(newLocation);
+
+    // Clear the input field
+    setNewLocation('');
+  };
+
+  const handleCardClick = (location) => {
+    setCity(location.name);
+  };
+
+  return (
+    <Box sx={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Typography variant="h6" sx={{ color: 'white', marginBottom: '20px' }}>
+        Add and Select Location
+      </Typography>
+      <Card
+        sx={{
+          width: '100%',
+          maxWidth: '400px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '20px',
+          marginBottom: '20px',
+          backgroundColor: '#333',
+          borderRadius: '10px',
+        }}
+      >
+        <CardContent sx={{ width: '100%', textAlign: 'center' }}>
+          <TextField
+            variant="outlined"
+            size="small"
+            placeholder="Enter location"
+            value={newLocation}
+            onChange={(e) => setNewLocation(e.target.value)}
+            sx={{ backgroundColor: 'white', borderRadius: '4px', marginBottom: '10px' }}
+          />
+          <Button 
+            onClick={onAllow} 
+            sx={{ 
+              color: '#4caf50', // Button color
+              border: '1px solid #4caf50', // Button border
+              '&:hover': {
+                backgroundColor: '#4caf50', // Hover background color
+                color: '#ffffff', // Hover text color
+              }
+            }}
+          >
+  Add Location
+        </Button>
+
+        </CardContent>
+      </Card>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px', width: '100%' }}>
+        {locations.map((location) => (
+          <Card
+            key={location.id}
+            onClick={() => handleCardClick(location)}
+            sx={{
+              width: '200px',
+              cursor: 'pointer',
+              '&:hover': { backgroundColor: '#444' },
+              backgroundColor: '#555',
+            }}
+          >
+            <CardContent>
+              <Typography variant="body1" sx={{ color: 'white' }}>
+                {location.name}
+              </Typography>
+            </CardContent>
+          </Card>
+        ))}
+      </Box>
+    </Box>
+  );
+};
+
+export default LocationsSection;
