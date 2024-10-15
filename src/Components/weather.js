@@ -9,7 +9,7 @@ import RainIcon from '../assets/rainIcon.svg';
 import CloudyIcon from '../assets/partly-cloudy-day.svg';
 import moment from 'moment-timezone';
 import HourlyWeather from './HourlyWeather';
-import WeeklyWeather from './WeeklyWeather'; // Import WeeklyWeather component
+import WeeklyWeather from './WeeklyWeather';
 import { v4 as uuidv4 } from 'uuid';
 
 const Weather = ({ unit }) => {
@@ -26,12 +26,11 @@ const Weather = ({ unit }) => {
   const API_KEY = 'cb8a24eda19aec99706e3ce761cb5881';
 
   useEffect(() => {
-    // Check for saved city in local storage
     const savedCity = localStorage.getItem('city');
     if (savedCity) {
       setCity(savedCity);
     } else {
-      setCity('soweto'); // Fallback city if no city is saved
+      setCity('soweto');
     }
   }, []);
 
@@ -55,7 +54,6 @@ const Weather = ({ unit }) => {
       const currentTime = moment().utcOffset(timezone / 60);
       setCityTime(currentTime.format('dddd HH:mm'));
 
-      // Extract hourly weather data
       const hourly = response.data.list.slice(0, 8);
       setHourlyWeather(hourly.map(entry => ({
         time: moment(entry.dt_txt).format('h:mm A'),
@@ -63,7 +61,6 @@ const Weather = ({ unit }) => {
         weatherId: entry.weather[0].id,
       })));
 
-      // Extract and process weekly weather data
       const dailyData = [];
       let currentDay = null;
       let dayTemp = 0;
@@ -86,7 +83,6 @@ const Weather = ({ unit }) => {
         count++;
       });
       setWeeklyWeather(dailyData);
-
       setLoading(false);
     } catch (error) {
       setError('Error fetching weather data');
@@ -99,125 +95,137 @@ const Weather = ({ unit }) => {
     const newLocationObj = { id: uuidv4(), name: newLocation };
     setLocations([...locations, newLocationObj]);
     setCity(newLocation);
-    localStorage.setItem('city', newLocation); // Save to local storage
+    localStorage.setItem('city', newLocation);
     setNewLocation('');
   };
 
   const handleCardClick = (location) => {
     setCity(location.name);
-    localStorage.setItem('city', location.name); // Save to local storage
+    localStorage.setItem('city', location.name);
   };
 
   const getWeatherIcon = (weatherId) => {
     if (weatherId >= 200 && weatherId < 300)
-      return <img src={ThunderstormIcon} alt="Thunderstorm" style={{ width: '200px', height: '200px' }} />;
+      return <img src={ThunderstormIcon} alt="Thunderstorm" style={{ width: '150px', height: '150px' }} />;
     if (weatherId >= 300 && weatherId < 500)
-      return <img src={RainIcon} alt="Drizzle" style={{ width: '200px', height: '200px' }} />;
+      return <img src={RainIcon} alt="Drizzle" style={{ width: '150px', height: '150px' }} />;
     if (weatherId >= 500 && weatherId < 600)
-      return <img src={ThunderstormIcon} alt="Rain" style={{ width: '200px', height: '200px' }} />;
+      return <img src={ThunderstormIcon} alt="Rain" style={{ width: '150px', height: '150px' }} />;
     if (weatherId >= 600 && weatherId < 700)
-      return <img src={SnowIcon} alt="Snow" style={{ width: '200px', height: '200px' }} />;
+      return <img src={SnowIcon} alt="Snow" style={{ width: '150px', height: '150px' }} />;
     if (weatherId >= 700 && weatherId < 800)
-      return <img src={FogIcon} alt="Fog" style={{ width: '200px', height: '200px' }} />;
+      return <img src={FogIcon} alt="Fog" style={{ width: '150px', height: '150px' }} />;
     if (weatherId === 800)
-      return <img src={ClearDayIcon} alt="Clear Sky" style={{ width: '200px', height: '200px' }} />;
+      return <img src={ClearDayIcon} alt="Clear Sky" style={{ width: '150px', height: '150px' }} />;
     if (weatherId > 800)
-      return <img src={CloudyIcon} alt="Cloudy" style={{ width: '200px', height: '200px' }} />;
+      return <img src={CloudyIcon} alt="Cloudy" style={{ width: '150px', height: '150px' }} />;
     return null;
   };
 
   return (
-    <Box sx={{ padding: '0' }}>
-      <Typography variant="h4" sx={{ marginBottom: '20px' }}>
+    <Box
+      sx={{
+        padding: '0',
+        width: '100%',
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: { xs: '10px', sm: '20px', md: '30px' },
+      }}
+    >
+      <Typography
+        variant="h4"
+        sx={{
+          marginBottom: '20px',
+          fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
+        }}
+      >
         Weather in {city}
       </Typography>
 
-      {/* Current Weather Box */}
-      <Box sx={{
-        border: '1px solid white',
-        backgroundColor: '#333',
-        padding: '20px',
-        borderRadius: '25px',
-      }}>
-        <Box sx={{
+      <Box
+        sx={{
+          border: '1px solid white',
+          backgroundColor: '#333',
+          padding: '20px',
+          borderRadius: '25px',
+          marginBottom: '20px',
           display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
           alignItems: 'center',
-          justifyContent: 'space-between',
-          height: '150px',
-        }}>
-          <Box sx={{ width: '150px', display: 'flex', justifyContent: 'center' }}>
-            {weather && getWeatherIcon(weather.weather[0].id)}
-          </Box>
-
-          <Box sx={{
+        }}
+      >
+        <Box
+          sx={{
+            width: '100%',
+            maxWidth: '150px',
             display: 'flex',
-            flexDirection: 'row',
+            justifyContent: 'center',
+            marginBottom: { xs: '20px', sm: '0' },
+          }}
+        >
+          {weather && getWeatherIcon(weather.weather[0].id)}
+        </Box>
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
             justifyContent: 'space-between',
             flex: 1,
-            paddingLeft: '20px',
+            paddingLeft: { xs: '0', sm: '20px' },
             borderRadius: '25px',
-          }}>
-            <Box sx={{ textAlign: 'center', flex: 1 }}>
-              <Typography variant="h4">
-                {weather ? `${weather.main.temp}°${unit === 'metric' ? 'C' : 'F'}` : '--'}
-              </Typography>
-              <Typography variant="h6">
-                <strong>Temperature</strong>
-              </Typography>
-            </Box>
-            <Box sx={{ textAlign: 'center', flex: 1 }}>
-              <Typography variant="h4">
-                {weather ? `${weather.main.humidity}%` : '--'}
-              </Typography>
-              <Typography variant="h6">
-                <strong>Humidity</strong>
-              </Typography>
-            </Box>
-            <Box sx={{ textAlign: 'center', flex: 1 }}>
-              <Typography variant="h4">
-                {weather ? `${weather.wind.speed} m/s` : '--'}
-              </Typography>
-              <Typography variant="h6">
-                <strong>Wind Speed</strong>
-              </Typography>
-            </Box>
+            textAlign: 'center',
+          }}
+        >
+          <Box sx={{ flex: 1, marginBottom: { xs: '10px', sm: '0' } }}>
+            <Typography variant="h4">
+              {weather ? `${weather.main.temp}°${unit === 'metric' ? 'C' : 'F'}` : '--'}
+            </Typography>
+            <Typography variant="h6">
+              <strong>Temperature</strong>
+            </Typography>
           </Box>
-        </Box>
-
-        {/* Hourly Weather Box */}
-        <Box sx={{
-          display: 'flex',
-          paddingLeft: '20px',
-          alignContent: 'center',
-          justifyContent: 'center',
-        }}>
-          {hourlyWeather.length > 0 && (
-            <HourlyWeather hourlyData={hourlyWeather} />
-          )}
-        </Box>
-
-        {/* Weekly Weather Box */}
-        <Box sx={{
-          display: 'flex',
-          paddingLeft: '20px',
-          alignContent: 'center',
-          justifyContent: 'center',
-          marginTop: '20px',
-        }}>
-          {weeklyWeather.length > 0 && (
-            <WeeklyWeather weeklyData={weeklyWeather} />
-          )}
+          <Box sx={{ flex: 1, marginBottom: { xs: '10px', sm: '0' } }}>
+            <Typography variant="h4">
+              {weather ? `${weather.main.humidity}%` : '--'}
+            </Typography>
+            <Typography variant="h6">
+              <strong>Humidity</strong>
+            </Typography>
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <Typography variant="h4">
+              {weather ? `${weather.wind.speed} m/s` : '--'}
+            </Typography>
+            <Typography variant="h6">
+              <strong>Wind Speed</strong>
+            </Typography>
+          </Box>
         </Box>
       </Box>
 
-      {/* Location Management Section */}
-      <Box sx={{
-        border: '1px solid white',
-        backgroundColor: '#333',
-        padding: '20px',
-        borderRadius: '25px',
-        marginTop: '20px',
-      }}>
+      <Box 
+  sx={{ 
+    marginBottom: '20px',
+    display: 'flex',
+    justifyContent: 'center' // Centering the content
+  }}
+>
+        {hourlyWeather.length > 0 && <HourlyWeather hourlyData={hourlyWeather} />}
+      </Box>
+
+      <Box sx={{ marginBottom: '20px' }}>
+        {weeklyWeather.length > 0 && <WeeklyWeather weeklyData={weeklyWeather} />}
+      </Box>
+
+      <Box
+        sx={{
+          border: '1px solid white',
+          backgroundColor: '#333',
+          padding: '20px',
+          borderRadius: '25px',
+        }}
+      >
         <Typography variant="h6" sx={{ marginBottom: '10px' }}>
           Manage Locations
         </Typography>
@@ -225,45 +233,30 @@ const Weather = ({ unit }) => {
           <TextField
             value={newLocation}
             onChange={(e) => setNewLocation(e.target.value)}
-            placeholder="Add new location"
-            sx={{ flex: 1, marginRight: '10px' }}
+            placeholder="Add a new location"
+            variant="outlined"
+            fullWidth
           />
-          <Button 
-  variant="contained" 
-  onClick={handleAddLocation}
-  sx={{
-    backgroundColor: '#4caf50', // Match background color
-    color: '#ffffff', // Text color
-    border: '1px solid #4caf50', // Border color
-    fontWeight: 'bold', // Make text bold
-    borderRadius: '8px', // Rounded corners
-    padding: '8px 16px', // Padding for the button
-    boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.2)', // Shadow effect
-    transition: 'background-color 0.3s, color 0.3s', // Smooth transition effect
-    '&:hover': {
-      backgroundColor: '#388e3c', // Darker green on hover
-      color: '#ffffff', // Keep text color on hover
-      borderColor: '#388e3c', // Border color on hover
-    },
-    '&:active': {
-      boxShadow: 'none', // Remove shadow on click
-      transform: 'scale(0.95)', // Slightly shrink on click
-    },
-  }}
->
-  Add Location
-</Button>
-
+          <Button onClick={handleAddLocation} sx={{ marginLeft: '10px' }} variant="contained">
+            Add
+          </Button>
         </Box>
-        <Box>
-          {locations.map(location => (
+        <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+          {locations.map((location) => (
             <Card
               key={location.id}
-              sx={{ marginBottom: '10px', cursor: 'pointer' }}
+              sx={{
+                minWidth: '150px',
+                maxWidth: '200px',
+                margin: '10px',
+                cursor: 'pointer',
+                backgroundColor: location.name === city ? '#555' : '#444',
+                '&:hover': { backgroundColor: '#666' },
+              }}
               onClick={() => handleCardClick(location)}
             >
               <CardContent>
-                <Typography variant="h6">{location.name}</Typography>
+                <Typography variant="subtitle1">{location.name}</Typography>
               </CardContent>
             </Card>
           ))}

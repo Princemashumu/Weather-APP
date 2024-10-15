@@ -13,5 +13,23 @@
   box-sizing: border-box;
   overflow-y: hidden;
   margin: 0%;
-  
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
+  .home-container {
+    flex-direction: column; /* Stack items vertically */
+    padding: 20px;
+    text-align: center;
+    background-size: contain; /* Adjust background size */
+  }
+}
+
+@media (max-width: 480px) {
+  .home-container {
+    padding: 15px;
+    height: auto; /* Adjust height for better fit */
+    background-size: cover;
+    overflow-y: auto; /* Enable scrolling if content overflows */
+  }
 }
