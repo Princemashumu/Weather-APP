@@ -93,7 +93,7 @@ const Landing = () => {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        backgroundColor: 'black',
+        backgroundColor: '#75b4e3',
         textAlign: 'center',
         paddingBottom: '64px',
         overflowX: 'hidden',
