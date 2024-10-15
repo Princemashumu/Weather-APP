@@ -1,6 +1,11 @@
 ## Weather App
 ### Overview
 The Weather App provides real-time weather information, including current conditions, hourly and daily forecasts, for multiple user-specified locations. Users can customize the app by choosing between different temperature units and themes. The app also supports offline access by caching data and includes weather alerts via notifications.
+
+![image](https://github.com/user-attachments/assets/8b159a59-c37c-433d-a04b-06c1fd0cb246)
+
+
+
 ##
 ### Features
 
