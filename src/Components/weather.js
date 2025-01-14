@@ -23,7 +23,7 @@ const Weather = ({ unit }) => {
   const [weeklyWeather, setWeeklyWeather] = useState([]);
   const [locations, setLocations] = useState([]);
   const [newLocation, setNewLocation] = useState('');
-  const API_KEY = 'cb8a24eda19aec99706e3ce761cb5881';
+  const API_KEY = 'c36f397ab461ba715f74412a14b806b4';
 
   useEffect(() => {
     const savedCity = localStorage.getItem('city');
