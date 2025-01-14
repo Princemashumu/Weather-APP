@@ -60,7 +60,7 @@ const Landing = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=cb8a24eda19aec99706e3ce761cb5881`)
+          fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=c36f397ab461ba715f74412a14b806b4`)
             .then(response => response.json())
             .then(data => {
               setCity(data.name);
